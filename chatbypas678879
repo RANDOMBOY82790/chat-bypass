@@ -1,0 +1,93 @@
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AnthonyIsntHere/anthonysrepository/main/scripts/AntiChatLogger.lua", true))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AnthonyIsntHere/anthonysrepository/main/scripts/AntiChatLogger.lua", true))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AnthonyIsntHere/anthonysrepository/main/scripts/AntiChatLogger.lua", true))()
+
+-- Initialize ScreenGui and UI Elements
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local SendButton = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+
+-- Set Properties for ScreenGui
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+-- Configure Frame (Main GUI)
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Frame.Position = UDim2.new(0.4, 0, 0.4, 0)
+Frame.Size = UDim2.new(0, 300, 0, 120)
+Frame.Draggable = true
+Frame.Active = true
+Frame.BorderSizePixel = 0
+
+-- Add rounded corners and outline to Frame
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = Frame
+UIStroke.Parent = Frame
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(80, 80, 80)
+
+-- Configure TextBox (Input Box)
+TextBox.Parent = Frame
+TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TextBox.Position = UDim2.new(0.05, 0, 0.2, 0)
+TextBox.Size = UDim2.new(0.9, 0, 0.4, 0)
+TextBox.Font = Enum.Font.GothamBold
+TextBox.PlaceholderText = "Type your message here..."
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.TextScaled = true
+TextBox.TextWrapped = true
+
+-- Configure SendButton
+SendButton.Parent = Frame
+SendButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+SendButton.Position = UDim2.new(0.05, 0, 0.7, 0)
+SendButton.Size = UDim2.new(0.9, 0, 0.2, 0)
+SendButton.Font = Enum.Font.GothamBold
+SendButton.Text = "SEND"
+SendButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendButton.TextScaled = true
+SendButton.TextWrapped = true
+
+-- Function to apply custom bypass font style
+local function applyBypassFont(text)
+    -- Table with all bypass characters you provided
+    local bypassFont = {
+        ["q"] = "q̲", ["w"] = "ẉ̲", ["e"] = "ẹ̲", ["r"] = "ṛ̲", ["t"] = "ṭ̲",
+        ["y"] = "ỵ̲", ["u"] = "ụ̲", ["i"] = "ị̲", ["o"] = "ọ̲", ["p"] = "р̲",
+        ["a"] = "ạ̲", ["s"] = "ṣ̲", ["d"] = "ḍ̲", ["f"] = "f̲", ["g"] = "ɡ̲",
+        ["h"] = "ḥ̲", ["j"] = "ј̲", ["k"] = "ḳ̲", ["l"] = "ḷ̲", ["z"] = "ẓ̲",
+        ["x"] = "х̲", ["c"] = "с̲", ["v"] = "ṿ̲", ["b"] = "ḅ̲", ["n"] = "ṇ̲",
+        ["m"] = "ṃ̲", ["1"] = "1", ["2"] = "2", ["3"] = "3", ["4"] = "4",
+        ["5"] = "5", ["6"] = "6", ["7"] = "7", ["8"] = "8", ["9"] = "9",
+        ["0"] = "0", ["."] = ".", [","] = ","
+    }
+
+    local styledText = ""
+    -- Replace each character in the message with the bypass equivalent
+    for i = 1, #text do
+        local char = text:sub(i, i):lower()  -- Make sure it's lowercase to match the table keys
+        styledText = styledText .. (bypassFont[char] or char)
+    end
+
+    return styledText
+end
+
+-- Function to handle sending message with bypass font style
+SendButton.MouseButton1Click:Connect(function()
+    local message = TextBox.Text
+    if message ~= "" then
+        -- Apply bypass font style to the message
+        local styledMessage = applyBypassFont(message)
+        -- Send message in chat with custom font style
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(styledMessage, "All")
+        TextBox.Text = "" -- Clear the textbox after sending
+    end
+end)
